@@ -11,7 +11,7 @@ public class Audio_spec : MonoBehaviour
     {
         source = GetComponent<AudioSource>();
         source.clip = audioClip;
-        samples = new float[1024];
+        samples = new float[2048];
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -23,14 +23,10 @@ public class Audio_spec : MonoBehaviour
 
     float time = 0;
 
-    FFTWindow Window = FFTWindow.BlackmanHarris;
-    //FFTWindow Window = FFTWindow.Hamming;
-    //FFTWindow Window = FFTWindow.Hanning;
-
     // Update is called once per frame
     void Update()
     {
-        source.GetSpectrumData(samples, 0, Window);
+        source.GetSpectrumData(samples, 0, FFTWindow.BlackmanHarris);
         time += Time.deltaTime;
 
         if((time % 1) >= 0) { }
