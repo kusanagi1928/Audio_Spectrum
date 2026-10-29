@@ -5,13 +5,27 @@ public class Audio_spec : MonoBehaviour
     [SerializeField] AudioSource source;
     [SerializeField] AudioClip audioClip;
 
+    private const int BAR_COUNT = 48;
+    private const int SAMPLE = 2048;
+
+    private Vector2[] Bar_Limit;
+
     private float[] samples;
 
     private void Awake()
     {
         source = GetComponent<AudioSource>();
         source.clip = audioClip;
-        samples = new float[2048];
+        samples = new float[SAMPLE];
+        Bar_Limit = new Vector2[BAR_COUNT];
+        float pow = 0.0f;
+        for(int i = 0; i < BAR_COUNT; i++)
+        {  
+            if(i < 1) { Bar_Limit[0].x = 0.0f; } else { Bar_Limit[i].x = Bar_Limit[i - 1].y; }
+            pow = (i / BAR_COUNT);
+            Bar_Limit[i].y = 30 * Mathf.Pow((16000 / 30), pow);
+            Debug.Log("index: " + i + "  min: " + Bar_Limit[i].x + "  max: " + Bar_Limit[i].y + "  pow: " + pow);
+        }
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -21,15 +35,11 @@ public class Audio_spec : MonoBehaviour
         
     }
 
-    float time = 0;
-
     // Update is called once per frame
     void Update()
     {
         source.GetSpectrumData(samples, 0, FFTWindow.BlackmanHarris);
-        time += Time.deltaTime;
-
-        if((time % 1) >= 0) { }
+        
     }
 
     private void OnDrawGizmos()
