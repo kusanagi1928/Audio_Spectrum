@@ -5,8 +5,12 @@ public class Audio_spec : MonoBehaviour
     [SerializeField] AudioSource source;
     [SerializeField] AudioClip audioClip;
 
+    [SerializeField] int check = 3;
+
     private const int BAR_COUNT = 48;
     private const int SAMPLE = 2048;
+    private const float F_MAX = 16000.0f;
+    private const float F_MIN = 30.0f;
 
     private Vector2[] Bar_Limit;
 
@@ -22,8 +26,8 @@ public class Audio_spec : MonoBehaviour
         for(int i = 0; i < BAR_COUNT; i++)
         {  
             if(i < 1) { Bar_Limit[0].x = 0.0f; } else { Bar_Limit[i].x = Bar_Limit[i - 1].y; }
-            pow = (i / BAR_COUNT);
-            Bar_Limit[i].y = 30 * Mathf.Pow((16000 / 30), pow);
+            pow = i / (float)(BAR_COUNT);
+            Bar_Limit[i].y = F_MIN * Mathf.Pow((F_MAX / F_MIN), pow);
             Debug.Log("index: " + i + "  min: " + Bar_Limit[i].x + "  max: " + Bar_Limit[i].y + "  pow: " + pow);
         }
     }
@@ -32,7 +36,6 @@ public class Audio_spec : MonoBehaviour
     void Start()
     {
         Awake();
-        
     }
 
     // Update is called once per frame
